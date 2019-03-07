@@ -148,7 +148,7 @@ class _MyButtonState extends State<MyButton>{
                         style: TextStyle(
                           color: Colors.white
                         ),),
-                color: Colors.blueAccent,
+                color: Colors.redAccent,
                 onPressed: onPressButton,
               )
             ],
