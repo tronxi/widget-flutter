@@ -1,8 +1,179 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:curso_flutter/pages/contact.dart';
+import 'package:curso_flutter/pages/home.dart';
+import 'package:curso_flutter/pages/video.dart';
 
 void main() => runApp(MaterialApp(
-  home: MyAlertDialog()
+  home: MyTabs()
 ));
+//Tabs
+class MyTabs extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return MyTabsState();
+  }
+}
+class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin{
+  TabController controller;
+  @override
+  void initState(){
+    super.initState();
+    controller = new TabController(length: 3, vsync: this);
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("video Tabs"),
+        backgroundColor: Colors.redAccent,
+        bottom: TabBar(
+          controller: controller,
+          tabs: <Widget>[
+            Tab(
+              icon: Icon(Icons.home)
+            ),
+            Tab(
+              icon: Icon(Icons.ondemand_video)
+            ),
+            Tab(
+              icon: Icon(Icons.contacts)
+            )
+          ],
+        ),
+      ),
+      body: TabBarView(
+        children: <Widget>[
+          Home(),
+          Video(),
+          Contact()
+        ],
+        controller: controller,
+      )
+    );
+  }
+
+}
+//Stepper
+class MyStepper extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return MyStepperState();
+  }
+}
+class MyStepperState extends State<MyStepper>{
+  static int _currentStep = 0;
+  static List<Step> mySteps = [
+    Step(
+      title:Text("paso 1"),
+      content: Text("aprender flutter")
+    ),
+    Step(
+      title: Text("paso 2"),
+      content: Text("contenido paso 2")
+    ),
+    Step(
+      title: Text("paso 3"),
+      content: Text("contenido paso 3")
+    )
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Steper")
+      ),
+      body: Container(
+        child: Stepper(
+          //type: StepperType.horizontal,
+          currentStep: _currentStep,
+          steps: mySteps,
+          onStepCancel: (){
+            setState((){
+              if(_currentStep > 0) {
+                _currentStep--;
+              }else{
+                _currentStep = 0;
+              }
+            });
+          },
+          onStepContinue: (){
+            setState((){
+              if(_currentStep < mySteps.length -1) {
+                _currentStep++;
+              }else{
+                _currentStep = 0;
+              }
+            });
+          },
+          onStepTapped: (step){
+            setState((){
+              _currentStep = step;
+            });
+          },
+        ),
+      )
+    );
+  }
+
+}
+
+//Conexion Dato
+class Dato {
+  final int id;
+  final String nombre;
+
+  Dato({this.id, this.nombre});
+
+  factory Dato.fromJson(Map<String, dynamic> json) {
+    return Dato(
+      id: json['id'],
+      nombre: json['nombre'],
+    );
+  }
+}
+
+Future<Dato> fetchDato() async {
+  final response =
+  await http.get('http://192.168.0.5/conexionBD-spring/dato/100');
+  if (response.statusCode == 200) {
+    return Dato.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Error al recibir el dato');
+  }
+}
+
+class PeticionHttp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("prueba http"),
+      ),
+      body: Center(
+        child: FutureBuilder<Dato>(
+          future: fetchDato(),
+          builder: (context, snapshot){ return _crearMensaje(context, snapshot);}
+        ),
+      )
+    );
+  }
+
+  Widget _crearMensaje(context, snapshot){
+    if (snapshot.hasData) {
+      return Text(snapshot.data.nombre);
+    } else if (snapshot.hasError) {
+      return Text("${snapshot.error}");
+    }
+    // Por defecto, muestra un loading spinner
+    return CircularProgressIndicator();
+  }
+}
+
+//AlertDialog
 class MyAlertDialog extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -64,7 +235,7 @@ class MyAlertDialogState extends State<MyAlertDialog>{
     Navigator.pop(context);
   }
 }
-
+//TextView
 class MyTextView extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -112,6 +283,7 @@ class MytextViewState extends State<MyTextView>{
 
   }
 }
+//Boton
 class MyButton extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -165,7 +337,7 @@ class _MyButtonState extends State<MyButton>{
     });
   }
 }
-
+//Stateless
 class MyApp extends StatelessWidget{
   final double iconSize = 40.0;
   final TextStyle textStyle = TextStyle(
