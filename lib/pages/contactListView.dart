@@ -18,7 +18,9 @@ class ContactoLista extends StatelessWidget{
       const ContactModel(name: "sergio", correo: "sergio@flutter.com"),
       const ContactModel(name: "sergio", correo: "sergio@flutter.com"),
       const ContactModel(name: "sergio", correo: "sergio@flutter.com"),
-      const ContactModel(name: "ulian", correo: "sergio@flutter.com"),
+      const ContactModel(name: "ulian", correo: "ulian@flutter.com"),
+      const ContactModel(name: "iti", correo: "ulian@comemeLosHuevos.com"),
+
     ];
   }
   @override
@@ -52,8 +54,17 @@ class ContactItem extends StatelessWidget{
         leading: CircleAvatar(
           child: Text((_contact.name[0].toUpperCase()))
         ),
-        title: Text(_contact.name),
-        subtitle: Text(_contact.correo),
+        title: Align(
+          child: new Text(_contact.name,
+            style: TextStyle(
+              fontSize: 18
+            ),),
+          alignment: Alignment.topLeft
+        ),
+        subtitle: Align(
+            child: new Text(_contact.correo),
+            alignment: Alignment.bottomLeft
+        ),
       );
   }
 
