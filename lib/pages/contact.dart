@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Contact extends StatelessWidget{
+  static const String routeName = "/contact";
   @override
   Widget build(BuildContext context) {
     return Container(

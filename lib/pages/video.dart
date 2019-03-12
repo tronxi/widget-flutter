@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Video extends StatelessWidget{
+  static const String routeName = "/video";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -9,7 +11,7 @@ class Video extends StatelessWidget{
             Icon(Icons.ondemand_video,
                 size: 170.0,
                 color: Colors.green),
-            Text("segundo Tab")
+            Text("tercer Tab")
           ],
         )
     );
